@@ -146,7 +146,7 @@ export default {
   }
 }
 .iconfont {
-  font-size: 28px !important;
+  font-size: 37px;
 }
 .sent {
   height: 48px;
