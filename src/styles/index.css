@@ -75,3 +75,12 @@
 .iconshipin:before {
   content: "\e617";
 }
+body {
+  background-color: #f5f7f9;
+}
+body .van-nav-bar-title {
+  background-color: #3296fa;
+}
+body .van-nav-bar-title .van-nav-bar__title {
+  color: #fff;
+}
