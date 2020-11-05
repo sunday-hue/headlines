@@ -1,7 +1,7 @@
 <!-- vue 快捷方式 -->
 <template>
   <div class="serch">
-    <form action="/">
+    <form action="/" class="searchFrom">
       <van-search
         v-model="serchText"
         show-action
@@ -103,10 +103,20 @@ export default {
 </script>
 
 <style lang='less' scoped>
-.van-search {
-  background-color: #3296fa;
-  .van-search__action {
-    color: #fff;
+.serch {
+  padding-top: 108px;
+  .searchFrom {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 99;
+  }
+  .van-search {
+    background-color: #3296fa;
+    .van-search__action {
+      color: #fff;
+    }
   }
 }
 </style>
