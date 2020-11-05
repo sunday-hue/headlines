@@ -5,14 +5,17 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    // user: JSON.parse(window.sessionStorage.getItem('USERTOKEN'))
-    user: getItem('userToken')
+    // 用户的token
+    user: getItem('userToken'),
+    // 搜索页面
+    serchInfo: {}
   },
   mutations: {
+    // 获取用户登陆时的token
     getUser(state, token) {
       state.user = token
       // 把获取到的值，保存到存储端
-      // window.sessionStorage.setItem('USERTOKEN', JSON.stringify(token))
+      // console.log(state.user)
       setItem('userToken', state.user)
     }
   },

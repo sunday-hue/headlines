@@ -1,7 +1,14 @@
 <template>
   <div class="login_container">
     <!-- 头部登录 -->
-    <van-nav-bar title="登录" class="van-nav-bar-title" />
+    <van-nav-bar title="登录" class="van-nav-bar-title">
+      <van-icon
+        slot="right"
+        name="cross"
+        class="bachbtn"
+        @click="$router.go(-1)"
+      />
+    </van-nav-bar>
     <!-- 表单输入框区域 -->
     <van-form @submit="onLogin" ref="loginFormRef">
       <van-field
@@ -52,7 +59,7 @@
 </template>
 
 <script>
-import { login, getCode } from '@/api/user.js'
+import { login, getCode } from '@/api/user'
 export default {
   name: 'loginPage',
   data() {
@@ -93,11 +100,15 @@ export default {
       // 3:提交表单请求数据
       try {
         const { data: res } = await login(this.user)
-        console.log('登陆成功', res)
+
+        // console.log('登陆成功', res)
         this.$store.commit('getUser', res.data)
+        // console.log(res.data)
         // 提示 success 或者 fail 的时候，会先把其它的 toast 先清除
         this.$toast.success('登陆成功', res)
+        this.$router.back()
       } catch (err) {
+        console.log(err)
         if (err.response.status === 400) {
           // console.log('手机号或验证码错误')
           this.$toast.fail('手机号或验证码错误')
@@ -111,7 +122,7 @@ export default {
     // 发送验证码
     async sendCode() {
       try {
-        await this.$refs.loginFormRef.validate('mobile')
+        this.$refs.loginFormRef.validate('mobile')
         // console.log('mobile')
         // 手机号校验成功就调用接口想改手机号发送信息
         await getCode(this.user.mobile)
@@ -121,11 +132,12 @@ export default {
       } catch (err) {
         // 该连接自带一分钟内不能频繁发送的功能
         this.isDowenTimeVisible = false
-        if (err.response.status === 429) {
-          this.$toast('发送太频繁了，请稍后重试')
-        } else {
-          this.$toast('发送失败，请稍后重试')
-        }
+        console.log(err)
+        // if (err.response.status === 429) {
+        //   this.$toast('发送太频繁了，请稍后重试')
+        // } else {
+        //   this.$toast('发送失败，请稍后重试')
+        // }
       }
     }
   },
@@ -156,5 +168,9 @@ export default {
   background-color: #ededed;
   border: 0;
   color: #666;
+}
+.bachbtn {
+  font-style: 24px;
+  color: #fff;
 }
 </style>

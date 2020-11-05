@@ -9,6 +9,8 @@ import vant from 'vant'
 import 'vant/lib/index.css'
 // 导入自适配插件 动态加载rem基准值
 import 'amfe-flexible'
+// 引入格式化时间的插件
+import '@/utils/dayjs'
 Vue.config.productionTip = false
 Vue.use(vant)
 new Vue({
