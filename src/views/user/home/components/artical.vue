@@ -67,6 +67,7 @@ export default {
         const { data } = await getArticle({
           channel_id: this.channel.id, // 当前频道的id
           timestamp: this.timestamp || Date.now(), // 时间戳，请求新的推荐数据传当前的时间戳，请求历史推荐传指定的时间戳
+          // timestamp: 1604566074587,
           with_top: 1 // 是否包含置顶，进入页面第一次请求时要包含置顶文章，1-包含置顶，0-不包含
         })
         // 2:把请求数据的结果添加到list数组
@@ -99,7 +100,8 @@ export default {
       try {
         const { data } = await getArticle({
           channel_id: this.channel.id, // 当前频道的id
-          timestamp: Date.now(), // 时间戳，请求新的推荐数据传当前的时间戳，请求历史推荐传指定的时间戳
+          timestamp: Date.now(),
+          // timestamp: 1604566074587,
           with_top: 1 // 是否包含置顶，进入页面第一次请求时要包含置顶文章，1-包含置顶，0-不包含
         })
         // if (Math.random > 0.1) {
@@ -115,7 +117,6 @@ export default {
         this.isRefresh = false
       } catch (err) {
         // console.log('刷新失败')
-        // this.refreshSucccess =
         this.error = false
         // 关闭刷新的按钮
         this.isRefresh = false

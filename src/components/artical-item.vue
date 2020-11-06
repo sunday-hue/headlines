@@ -1,20 +1,10 @@
 <template>
   <van-cell-group>
-    <!-- <van-cell @click="to"></van-cell> -->
-    <van-cell class="artical-item">
-      <!-- <slot name="title">{{ article.title }}</slot> -->
+    <van-cell class="artical-item" :to="`/article/${article.art_id}`">
       <div slot="title" class="title van-multi-ellipsis--l2">
         {{ article.title }}
       </div>
-      <!-- <van-cell v-if="article.cover.type === 3"> -->
-      <!-- <div slot="default" :key="i" v-for="(img, i) in article.cover.images">
-          <van-image width="100" height="100" :src="img" />
-        </div> -->
-      <!-- <slot name="label">
-        <span>{{ article.aut_name }}</span>
-        <span>{{ article.comm_count }}评论</span>
-        <span>{{ article.pubdate }}</span>
-      </slot> -->
+
       <div slot="lable" class="cover_lable">
         <div v-if="article.cover.type === 3" class="cover_img">
           <div
