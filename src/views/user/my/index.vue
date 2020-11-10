@@ -18,7 +18,12 @@
         </div>
         <!-- 右边 -->
         <div class="right">
-          <van-button color="skyblue" plain class="btn" round
+          <van-button
+            color="skyblue"
+            plain
+            class="btn"
+            round
+            to="/my/userProfile"
             >编辑资料</van-button
           >
         </div>

@@ -42,11 +42,7 @@ export default {
   data() {
     return {}
   },
-  methods: {
-    to() {
-      console.log(this.article)
-    }
-  },
+  methods: {},
   created() {}
 }
 </script>

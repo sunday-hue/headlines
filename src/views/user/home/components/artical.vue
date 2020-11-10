@@ -20,12 +20,13 @@
           :key="index"
           :title="item.title"
         > -->
+        <!-- </van-cell> -->
         <artical-item
-          :article="item"
           :key="index"
           v-for="(item, index) in list"
+          :article="item"
         ></artical-item>
-        <!-- </van-cell> -->
+
         <!-- <van-cell
           v-for="(item, index) in list"
           :key="index"
@@ -72,7 +73,7 @@ export default {
         })
         // 2:把请求数据的结果添加到list数组
         this.list.push(...data.data.results)
-        // console.log(data)
+        // console.log(this.list)
 
         // 模拟加载失败的情况
         // if (Math.random > 0.5) {

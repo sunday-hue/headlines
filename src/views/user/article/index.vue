@@ -92,19 +92,56 @@
           ref="imgcotent"
         ></div>
         <van-divider>正文结束</van-divider>
+        <!-- 文章评论部分 -->
+
+        <comment-list
+          :source="articleDetails.art_id"
+          :list="commentContent"
+          @update-comment="commentCount = $event"
+        />
+
+        <!-- <comment-list
+          @update-comment="commentCount = $event"
+          :source="articleDetails.art_id"
+        /> -->
+
         <!-- 底部区域 -->
         <div class="article-bottom">
-          <van-button class="comment-btn" type="default" round size="small"
+          <van-button
+            class="comment-btn"
+            type="default"
+            round
+            size="small"
+            @click="popShow"
             >写评论</van-button
           >
+          <!-- 添加评论回复 -->
+          <van-popup v-model="show" :style="{ height: '30%' }" position="bottom"
+            ><van-field
+              v-model.trim="message"
+              rows="2"
+              autosize
+              type="textarea"
+              maxlength="50"
+              placeholder="请输入留言"
+              show-word-limit
+              ><template #button>
+                <van-button @click="addPublish" size="small" type="primary"
+                  >发布</van-button
+                >
+              </template>
+            </van-field>
+          </van-popup>
+
+          <!-- 点赞数量 -->
           <!-- <van-icon name="comment-o" info="123" color="#777" /> -->
-          <van-icon name="comment-o" badge="123" color="#777" />
+          <van-icon name="comment-o" :badge="commentCount" color="#777" />
           <!-- 星星：收藏 -->
           <collect-article
             v-model="articleDetails.is_collected"
             :articleId="articleDetails.art_id"
           />
-          <!-- 赞：点赞 -->
+          <!-- 赞：文章点赞按钮 -->
           <lick-article
             :articleId="articleDetails.art_id"
             v-model="articleDetails.attitude"
@@ -132,6 +169,15 @@
       </div>
       <!-- /加载失败：其它未知错误（例如网络原因或服务端异常） -->
     </div>
+    <van-popup
+      v-model="isPostshow"
+      position="bottom"
+      style="height: 90%"
+      @reply-pop="replayClose"
+    >
+      <!-- 回复品论的弹出层 -->
+      <replay-post :comment="currentComment" />
+    </van-popup>
   </div>
 </template>
 
@@ -144,12 +190,15 @@ import { ImagePreview } from 'vant'
 import FollowUser from '@/components/followUser'
 import CollectArticle from '@/components/collectArticle'
 import LickArticle from '@/components/likeArticle'
+import CommentList from './component/comment'
+import { getCommentsContent } from '@/api/comment'
 export default {
   name: 'ArticleIndex',
   components: {
     FollowUser,
     CollectArticle,
-    LickArticle
+    LickArticle,
+    CommentList
   },
   props: {
     articleId: {
@@ -169,7 +218,18 @@ export default {
       //   3-其他错误，显示重新加载界面
       flag: 0,
       // 关注时的loding状态
-      isLoading: false
+      isLoading: false,
+      // 点赞数量
+      commentCount: 0,
+      // 是否显示弹出层
+      show: false,
+      // 弹出框里的内容
+      message: '',
+      // 品论内容
+      commentContent: [],
+      // 是否展示回复信息的弹出层
+      isPostshow: false,
+      currentComment: {} // 点击回复的那个评论对象
     }
   },
   computed: {},
@@ -180,6 +240,12 @@ export default {
   mounted() {},
   methods: {
     async loadArticles() {
+      // 页面一打开就显示loding标识，给用户一个交互效果
+      this.$toast.loading({
+        message: '加载中...', // 提示信息
+        forbidClick: true, // 是否禁止背景点击
+        duration: 0 // 持续时间，0表示时序展示不停止
+      })
       this.flag = 0
       try {
         const { data } = await getArticles(this.articleId)
@@ -196,7 +262,7 @@ export default {
         setTimeout(() => {
           this.runderImg()
         }, 0)
-
+        this.$toast.success('加载成功')
         // 文章详情获取成功，显示内容界面
         this.flag = 1
       } catch (err) {
@@ -228,6 +294,35 @@ export default {
           })
         }
       })
+    },
+    // 控制弹出层是否显示
+    popShow() {
+      this.show = true
+    },
+    async addPublish() {
+      try {
+        // console.log(this.articleDetails)
+        const { data } = await getCommentsContent({
+          target: this.articleDetails.art_id, // 评论的目标id（评论文章即为文章id，对评论进行回复则为评论id）
+          content: this.message, // 评论内容
+          art_id: null
+        })
+        // console.log(data.data.new_obj)
+        this.commentContent.unshift(data.data.new_obj)
+        // 清空内容
+        this.message = ''
+        // 关闭弹出层
+        this.show = false
+        this.$toast.success('发布成功')
+      } catch (err) {
+        this.$toast('发布评论数据失败')
+      }
+    },
+    replayClose(comment) {
+      // 在文章详情页面中获取到点击的文章
+      this.commentCount = comment
+      // 显示回复弹窗
+      this.isPostshow = true
     }
   }
 }
